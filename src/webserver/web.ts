@@ -3,11 +3,11 @@ import express from 'express'
 import methodOverride from 'method-override'
 import cookieParser from 'cookie-parser'
 import helmet from 'helmet';
-import { setGQL } from './graphql';
+import { setGQL } from '../middleware/graphql';
 import sessionParser from 'express-session'
 import path from 'path';
-import { setRouter } from './router';
-import { setSchedule } from './schedule';
+import { setRouter } from '../route/router';
+import { setSchedule } from '../scheduler/schedule';
 import http from 'http'
 import { ApolloServer, gql } from 'apollo-server-express';
 
