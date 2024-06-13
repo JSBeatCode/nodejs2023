@@ -1,0 +1,42 @@
+// import { makeExecutableSchema } from 'graphql-tools'
+// import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer, gql } from 'apollo-server-express';
+import _ from 'lodash'
+
+export async function setGQL(app: any) {
+    
+    const typeDefs = gql`
+        type Query {
+            hello: String
+        }
+        
+        type Mutation {
+            createUser(name: String!): User
+        }
+        
+        type User {
+            id: ID!
+            name: String!
+        }
+    `;
+    
+    const resolvers = {
+        Query:{
+            hello: () => 'Hello, World!'
+        },
+        Mutation: {
+            createUser: (parant: any, args: any)=>{
+                return { id: Date.now().toString(), name: args.name}
+            }
+        }
+    }
+    const server = new ApolloServer({
+        typeDefs,
+        resolvers
+    })
+    // 서버 시작
+    await server.start();
+    
+    server.applyMiddleware({ app })
+    
+}

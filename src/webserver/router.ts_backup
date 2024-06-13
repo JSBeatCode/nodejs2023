@@ -1,0 +1,41 @@
+import moment from 'moment'
+import debugModule from 'debug';
+import path from 'path';
+
+const debug = debugModule('app:router');
+
+function defaultPage(req: any, res: any, next: any) {
+    debug("setPage");
+    
+    // if(something){
+    //     res.redirect('/noauth')
+    // }
+    
+    const params = {
+        version: moment().unix()
+    }
+    
+    res.render('index', params)
+}
+
+export function setRouter(app: any){
+    debug('setRouter')
+    
+    app.get('/login', defaultPage)
+    
+    app.get('/', (req: any, res: any, next: any)=>{
+        res.redirect('/home')
+    })
+    
+    app.get('/home', defaultPage)
+    
+    app.get('/about/?*', (req: any, res: any, next: any)=>{
+        res.redirect('/about')
+    })
+    
+    app.get('download', (req: any, res: any)=>{
+        const file = path.join(process.cwd(), 'file.xlsx')
+        var time = moment().format('x')
+        res.download(file, 'exceldoc' + time + '.xlsx')
+    })
+} 
