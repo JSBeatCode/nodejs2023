@@ -9,7 +9,7 @@ import path from 'path';
 import { setRouter } from '../route/router';
 import { setSchedule } from '../scheduler/schedule';
 import http from 'http'
-import { ApolloServer, gql } from 'apollo-server-express';
+// import { ApolloServer, gql } from 'apollo-server-express';
 
 const debug = debugModule('app:server');
 
@@ -19,7 +19,7 @@ export async function CreateServer(){
         
         // app.set('views', path.join(process.cwd(), 'public', 'views'))
         // app.set('views', path.join(process.cwd(), 'dist', 'views'))
-        app.set('views', path.join(process.cwd(), 'dist'));
+        app.set('views', path.join(process.cwd(), 'public'));
         app.set('view engine', 'ejs');
         
         app.use(express.json({ limit: '1mb' }))
@@ -47,7 +47,7 @@ export async function CreateServer(){
         // app.use('/', express.static(path.join(process.cwd(), 'public', 'assets'), { maxAge: 60 * 60 * 1000 })) 
         // app.use('/vendors', express.static(path.join(process.cwd(), 'public', 'vendors'), { maxAge: 60 * 60 * 1000 })) 
         
-        setRouter(app, gqlServer);
+        await setRouter(app);
         setSchedule();
         
         // console.log(process.env.NODE_STAGE)

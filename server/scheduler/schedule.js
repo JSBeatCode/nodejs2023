@@ -17,7 +17,7 @@ const debug_1 = __importDefault(require("debug"));
 const schedule = require('node-schedule');
 const debug = (0, debug_1.default)('app:types:schedule');
 function setSchedule() {
-    var scheduleVar = schedule.scheduleJob('*/10 * * * * *', () => __awaiter(this, void 0, void 0, function* () {
+    var scheduleVar = schedule.scheduleJob('*/5 * * * * *', () => __awaiter(this, void 0, void 0, function* () {
         debug('schedule running');
     }));
 }

@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setGQL = void 0;
+exports.setGQL = exports.gqlServer = exports.resolvers = exports.typeDefs = void 0;
 // import { makeExecutableSchema } from 'graphql-tools'
 // import { ApolloServer, gql } from 'apollo-server-express';
 const apollo_server_express_1 = require("apollo-server-express");
 function setGQL(app) {
     return __awaiter(this, void 0, void 0, function* () {
-        const typeDefs = (0, apollo_server_express_1.gql) `
+        exports.typeDefs = (0, apollo_server_express_1.gql) `
         type Query {
             hello: String
             books: [Book]
@@ -40,7 +40,7 @@ function setGQL(app) {
             { title: 'The Awakening', author: 'Kate Chopin' },
             { title: 'City of Glass', author: 'Paul Auster' }
         ];
-        const resolvers = {
+        exports.resolvers = {
             Query: {
                 hello: () => 'Hello, World!',
                 books: () => books
@@ -56,13 +56,13 @@ function setGQL(app) {
                 }
             }
         };
-        const gqlServer = new apollo_server_express_1.ApolloServer({
-            typeDefs,
-            resolvers
+        exports.gqlServer = new apollo_server_express_1.ApolloServer({
+            typeDefs: exports.typeDefs,
+            resolvers: exports.resolvers
         });
         // 서버 시작
-        yield gqlServer.start();
-        gqlServer.applyMiddleware({ app });
+        yield exports.gqlServer.start();
+        exports.gqlServer.applyMiddleware({ app });
     });
 }
 exports.setGQL = setGQL;

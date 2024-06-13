@@ -1,11 +1,13 @@
 // import { makeExecutableSchema } from 'graphql-tools'
 // import { ApolloServer, gql } from 'apollo-server-express';
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer, ExpressContext, gql } from 'apollo-server-express';
 import _ from 'lodash'
-
+export let typeDefs: any;
+export let resolvers: any;
+export let gqlServer: ApolloServer<ExpressContext>;
 export async function setGQL(app: any) {
     
-    const typeDefs = gql`
+    typeDefs = gql`
         type Query {
             hello: String
             books: [Book]
@@ -32,7 +34,7 @@ export async function setGQL(app: any) {
             { title: 'City of Glass', author: 'Paul Auster' }
         ];
     
-    const resolvers = {
+    resolvers = {
         Query:{
             hello: () => 'Hello, World!',
             books: () => books
@@ -48,7 +50,7 @@ export async function setGQL(app: any) {
               }
         }
     }
-    const gqlServer = new ApolloServer({
+    gqlServer = new ApolloServer({
         typeDefs,
         resolvers
     })

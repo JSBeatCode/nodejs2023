@@ -2,41 +2,44 @@ import moment from 'moment'
 import debugModule from 'debug';
 import path from 'path';
 import { graphql } from 'graphql';
+import { typeDefs, resolvers, gqlServer } from '../middleware/graphql';
+import { ApolloServer } from 'apollo-server-express';
 
 const debug = debugModule('app:router');
 
 function defaultPage(req: any, res: any, next: any) {
     debug("setPage");
-    
+
     // if(something){
     //     res.redirect('/noauth')
     // }
-    
+
     const params = {
         version: moment().unix()
     }
-    
+
     // res.render('index', params)
     res.render('index', { title: 'My App', message: 'Hello, world!' });
 
 }
 
-export function setRouter(app: any, gqlServer: any){
+export async function setRouter(app: any) {
+
     debug('setRouter')
-    
+
     app.get('/login', defaultPage)
-    
-    app.get('/', (req: any, res: any, next: any)=>{
+
+    app.get('/', (req: any, res: any, next: any) => {
         res.redirect('/home')
     })
-    
+
     app.get('/home', defaultPage)
-    
-    app.get('/about/?*', (req: any, res: any, next: any)=>{
+
+    app.get('/about/?*', (req: any, res: any, next: any) => {
         res.redirect('/home')
     })
-    
-    app.get('/download', (req: any, res: any)=>{
+
+    app.get('/download', (req: any, res: any) => {
         const file = path.join(process.cwd(), 'file.xlsx')
         console.log(file);
         var time = moment().format('x')
@@ -55,14 +58,15 @@ export function setRouter(app: any, gqlServer: any){
             }
         }
         `;
-        
+
         try {
-            const result = await graphql({
-                schema: gqlServer.schema,
-                source: defaultQuery,
+            const { data } = await gqlServer.executeOperation({
+                query: defaultQuery,
             });
-            res.json(result);
+            res.json(data);
+
         } catch (error: any) {
+            console.log(error)
             res.status(500).json({ error: error.message });
         }
     });
