@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setSequelize = exports.Book = void 0;
 const sequelize_1 = require("sequelize");
-const Database_1 = require("../db/Database");
+const Database_1 = require("@db/Database");
 const debug_1 = __importDefault(require("debug"));
 const debug = (0, debug_1.default)('app:dao');
 function setSequelize() {

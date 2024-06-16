@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelCtor } from "sequelize";
-import { sequelize } from "../db/Database";
+import { sequelize } from "@db/Database";
 import debugModule from 'debug';
 
 const debug = debugModule('app:dao');

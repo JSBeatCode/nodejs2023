@@ -3,8 +3,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 'V';
 import debugModule from 'debug';
 debugModule.enable('app:*')
 
-import { CreateServer } from './webserver/web';
-import { CreateDatastore } from './db/Database';
+import { CreateServer } from '@webserver/web';
+import { CreateDatastore } from '@db/Database';
 
 const debug = debugModule('app:index');
 

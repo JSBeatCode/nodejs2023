@@ -18,13 +18,13 @@ const express_1 = __importDefault(require("express"));
 const method_override_1 = __importDefault(require("method-override"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const helmet_1 = __importDefault(require("helmet"));
-const GraphqlServer_1 = require("../graphql/GraphqlServer");
+const GraphqlServer_1 = require("@graphql/GraphqlServer");
 const express_session_1 = __importDefault(require("express-session"));
 const path_1 = __importDefault(require("path"));
-const Routers_1 = require("../route/Routers");
-const schedule_1 = require("../scheduler/schedule");
+const Routers_1 = require("@route/Routers");
+const Schedule_1 = require("@scheduler/Schedule");
 const http_1 = __importDefault(require("http"));
-const Sequelizer_1 = require("../db/Sequelizer");
+const Sequelizer_1 = require("@db/Sequelizer");
 // import { ApolloServer, gql } from 'apollo-server-express';
 const debug = (0, debug_1.default)('app:server'); // Create a debug instance for logging server messages
 function CreateServer() {
@@ -53,7 +53,7 @@ function CreateServer() {
             // app.use('/', express.static(path.join(process.cwd(), 'public', 'assets'), { maxAge: 60 * 60 * 1000 })) 
             // app.use('/vendors', express.static(path.join(process.cwd(), 'public', 'vendors'), { maxAge: 60 * 60 * 1000 })) 
             yield (0, Routers_1.setRouter)(app); // Call the function to set up routes for the application
-            (0, schedule_1.setSchedule)(); // Call the function to set up any scheduled tasks
+            (0, Schedule_1.setSchedule)(); // Call the function to set up any scheduled tasks
             // Log the current environment (commented out, might be useful for debugging)
             // console.log(process.env.NODE_STAGE)
             const port = 3333; // Set the port number for the server
