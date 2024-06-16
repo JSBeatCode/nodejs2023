@@ -4,7 +4,7 @@ import debugModule from 'debug';
 debugModule.enable('app:*')
 
 import { CreateServer } from './webserver/web';
-import { CreateDatastore } from './db/database';
+import { CreateDatastore } from './db/Database';
 
 const debug = debugModule('app:index');
 

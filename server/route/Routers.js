@@ -16,7 +16,8 @@ exports.setRouter = void 0;
 const moment_1 = __importDefault(require("moment"));
 const debug_1 = __importDefault(require("debug"));
 const path_1 = __importDefault(require("path"));
-const graphql_1 = require("../middleware/graphql");
+const GraphqlServer_1 = require("@graphql/GraphqlServer");
+const Queries_1 = require("@graphql/Queries");
 const debug = (0, debug_1.default)('app:router');
 function defaultPage(req, res, next) {
     debug("setPage");
@@ -49,32 +50,33 @@ function setRouter(app) {
         // 기본 쿼리를 사용한 GraphQL 요청을 직접 수행하는 GET 방식 API 엔드포인트 추가
         app.get('/api/graphql', (req, res) => __awaiter(this, void 0, void 0, function* () {
             // 기본 쿼리 정의
-            const defaultQuery = `
-        {
-            hello
-            books {
-                title
-                author
-            }
-        }
-        `;
-            // console.log(gqlServer)
             try {
-                const { data } = yield graphql_1.gqlServer.executeOperation({
-                    query: defaultQuery,
+                const { data } = yield GraphqlServer_1.gqlServer.executeOperation({
+                    query: Queries_1.defaultQuery,
                 });
-                console.log('jsdno0 debug1-2');
+                debug(data);
                 res.json(data);
-                // const result = await graphql({
-                //     schema: gqlServer.schema,
-                //     source: defaultQuery,
-                // });
-                // console.log('jsdno0 debug1-2')
-                // res.json(result);
             }
             catch (error) {
-                console.log('jsdno0 debug1-3');
                 console.log(error);
+                res.status(500).json({ error: error.message });
+            }
+        }));
+        // REST API 엔드포인트 추가 (POST 방식으로 책 추가하기)
+        app.post('/api/books', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { title, author } = req.body;
+            debug(req.body);
+            debug(title);
+            debug(author);
+            try {
+                const { data } = yield GraphqlServer_1.gqlServer.executeOperation({
+                    query: Queries_1.addBookMutation,
+                    variables: { title, author },
+                });
+                debug(data);
+                res.json(data);
+            }
+            catch (error) {
                 res.status(500).json({ error: error.message });
             }
         }));

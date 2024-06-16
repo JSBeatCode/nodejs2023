@@ -1,9 +1,8 @@
 import moment from 'moment'
 import debugModule from 'debug';
 import path from 'path';
-import { graphql } from 'graphql';
-import { typeDefs, resolvers, gqlServer } from '../middleware/graphql';
-import { ApolloServer } from 'apollo-server-express';
+import { gqlServer } from '@graphql/GraphqlServer';
+import { addBookMutation, defaultQuery } from '@graphql/Queries';
 
 const debug = debugModule('app:router');
 
@@ -49,20 +48,12 @@ export async function setRouter(app: any) {
     // 기본 쿼리를 사용한 GraphQL 요청을 직접 수행하는 GET 방식 API 엔드포인트 추가
     app.get('/api/graphql', async (req: any, res: any) => {
         // 기본 쿼리 정의
-        const defaultQuery = `
-        {
-            hello
-            books {
-                title
-                author
-            }
-        }
-        `;
-
+        
         try {
             const { data } = await gqlServer.executeOperation({
                 query: defaultQuery,
             });
+            debug(data)
             res.json(data);
 
         } catch (error: any) {
@@ -70,5 +61,23 @@ export async function setRouter(app: any) {
             res.status(500).json({ error: error.message });
         }
     });
+
+    // REST API 엔드포인트 추가 (POST 방식으로 책 추가하기)
+  app.post('/api/books', async (req: any, res: any) => {
+    const { title, author } = req.body;
+    debug(req.body)
+    debug(title)
+    debug(author)
+    try {
+      const { data }: any = await gqlServer.executeOperation({
+        query: addBookMutation,
+        variables: { title, author },
+      });
+      debug(data)
+      res.json(data);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 
 } 

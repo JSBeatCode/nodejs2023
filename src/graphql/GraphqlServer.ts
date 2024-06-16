@@ -1,10 +1,10 @@
-// import { makeExecutableSchema } from 'graphql-tools'
-// import { ApolloServer, gql } from 'apollo-server-express';
 import { ApolloServer, ExpressContext, gql } from 'apollo-server-express';
 import _ from 'lodash'
+import { fetchBooks, fetchAddBook } from '@service/BookService';
 export let typeDefs: any;
 export let resolvers: any;
 export let gqlServer: ApolloServer<ExpressContext>;
+
 export async function setGQL(app: any) {
     
     typeDefs = gql`
@@ -28,26 +28,28 @@ export async function setGQL(app: any) {
             name: String!
         }
         `;
-
-        let books = [
-            { title: 'The Awakening', author: 'Kate Chopin' },
-            { title: 'City of Glass', author: 'Paul Auster' }
-        ];
     
     resolvers = {
         Query:{
             hello: () => 'Hello, World!',
-            books: () => books
+            books: async () => {
+                const books = await fetchBooks();
+                return books;
+            }
         },
         Mutation: {
             createUser: (parant: any, args: any)=>{
                 return { id: Date.now().toString(), name: args.name}
             },
-            addBook: (_: any, { title, author }: any) => {
-                const newBook = { title, author };
-                books.push(newBook);
-                return newBook;
-              }
+            addBook: async (_: any, { title, author }: any) => {
+                try {
+                  const book = await fetchAddBook(title, author); // 데이터베이스에 새 책 추가
+                  return book;
+                } catch (error) {
+                  console.error('Error adding book:', error);
+                  return null;
+                }
+            }
         }
     }
     gqlServer = new ApolloServer({

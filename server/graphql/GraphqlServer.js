@@ -10,9 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setGQL = exports.gqlServer = exports.resolvers = exports.typeDefs = void 0;
-// import { makeExecutableSchema } from 'graphql-tools'
-// import { ApolloServer, gql } from 'apollo-server-express';
 const apollo_server_express_1 = require("apollo-server-express");
+const BookService_1 = require("@service/BookService");
 function setGQL(app) {
     return __awaiter(this, void 0, void 0, function* () {
         exports.typeDefs = (0, apollo_server_express_1.gql) `
@@ -36,24 +35,28 @@ function setGQL(app) {
             name: String!
         }
         `;
-        let books = [
-            { title: 'The Awakening', author: 'Kate Chopin' },
-            { title: 'City of Glass', author: 'Paul Auster' }
-        ];
         exports.resolvers = {
             Query: {
                 hello: () => 'Hello, World!',
-                books: () => books
+                books: () => __awaiter(this, void 0, void 0, function* () {
+                    const books = yield (0, BookService_1.fetchBooks)();
+                    return books;
+                })
             },
             Mutation: {
                 createUser: (parant, args) => {
                     return { id: Date.now().toString(), name: args.name };
                 },
-                addBook: (_, { title, author }) => {
-                    const newBook = { title, author };
-                    books.push(newBook);
-                    return newBook;
-                }
+                addBook: (_1, _a) => __awaiter(this, [_1, _a], void 0, function* (_, { title, author }) {
+                    try {
+                        const book = yield (0, BookService_1.fetchAddBook)(title, author); // 데이터베이스에 새 책 추가
+                        return book;
+                    }
+                    catch (error) {
+                        console.error('Error adding book:', error);
+                        return null;
+                    }
+                })
             }
         };
         exports.gqlServer = new apollo_server_express_1.ApolloServer({

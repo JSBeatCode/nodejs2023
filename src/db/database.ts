@@ -6,7 +6,7 @@ import nconf from 'nconf';
 
 const debug = debugModule('app:database');
 
-let sequelize = null;
+export let sequelize: Sequelize;
 
 nconf.use('memory');
 nconf.argv().env().file({file: path.join(process.cwd(), 'config.json')});
@@ -31,7 +31,7 @@ export async function CreateDatastore() {
     return Promise.resolve();
 }
 
-async function connectDatastore(info: any) {
+export async function connectDatastore(info: any) {
     try {
         sequelize = new Sequelize('postgres', info.loginId, info.loginPw, {
             host: info.host,
